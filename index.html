@@ -32,8 +32,6 @@ td.b{background:var(--blue-bg);color:var(--blue-ink);font-weight:700}
 td.m{font-weight:700}
 .team{cursor:pointer;border-radius:6px;padding:2px 6px}
 .team.sel{background:var(--hl);color:#000;outline:2px solid #000}
-tr.past{opacity:.6}
-tr.next td.m::after{content:" NEXT";font-size:.65rem;background:var(--ink);color:var(--bg);padding:2px 5px;border-radius:5px;margin-left:6px;vertical-align:middle}
 .field{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--bg);font-size:.85rem}
 footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
 /* Mobile cards */
@@ -80,15 +78,12 @@ teams.forEach(t=>sel.add(new Option(t,t)));
 let field='';
 try{const s=localStorage.getItem('team');if(s&&teams.includes(s))sel.value=s}catch(e){}
 const q=new URLSearchParams(location.search).get('team');if(q&&teams.includes(q.toUpperCase()))sel.value=q.toUpperCase();
-function toDate(t){const[hm,ap]=t.split(' ');let[h,m]=hm.split(':').map(Number);if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return new Date(2026,10,7,h,m)}
 function cell(t,c,team){return `<td class="${c}"><span class="team${t===team?' sel':''}" data-t="${t}">${t}</span></td>`}
 function render(){
- const team=sel.value;const now=new Date();let nextFound=false;
+ const team=sel.value;
  const list=M.filter(x=>(!team||[...x.r,...x.b].includes(team))&&(!field||x.f===field));
  document.getElementById('rows').innerHTML=list.map(x=>{
-  const d=toDate(x.t);let cls='';
-  if(d.getTime()+4*60e3<now)cls='past';else if(!nextFound){cls='next';nextFound=true}
-  return `<tr class="${cls}"><td class="m">${x.m}</td><td class="t">${x.t}</td><td class="f"><span class="field">${x.f}</span></td>`+
+  return `<tr><td class="m">${x.m}</td><td class="t">${x.t}</td><td class="f"><span class="field">${x.f}</span></td>`+
    x.r.map(t=>cell(t,'r',team)).join('')+x.b.map(t=>cell(t,'b',team)).join('')+`</tr>`}).join('');
  const s=document.getElementById('summary');
  if(team){const rc=list.filter(x=>x.r.includes(team)).length;s.textContent=`${team}: ${list.length} match${list.length===1?'':'es'} shown · ${rc} red, ${list.length-rc} blue`}
@@ -98,7 +93,7 @@ function render(){
 sel.onchange=render;
 document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));b.classList.add('on');field=b.dataset.f;render()});
 document.getElementById('rows').onclick=e=>{const t=e.target.closest('.team');if(t){sel.value=sel.value===t.dataset.t?'':t.dataset.t;render();scrollTo({top:0,behavior:'smooth'})}};
-render();setInterval(render,60000);
+render();
 </script>
 </body>
 </html>
