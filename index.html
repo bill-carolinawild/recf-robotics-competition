@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Match List – CTEEA Ridgefield HS Blended Qualifier</title>
+<meta name="description" content="Qualification match schedule – CTEEA Ridgefield HS Blended Qualifier, Nov 7">
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#14161a;--muted:#5f6670;--line:#e2e5ea;
+--red:#d62b2b;--red-bg:#fde8e8;--red-ink:#a11d1d;--blue:#1f5fd6;--blue-bg:#e5eefe;--blue-ink:#163f91;--hl:#ffd84d}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#181b21;--ink:#eef0f3;--muted:#9aa2ad;--line:#2a2f37;
+--red-bg:#3a1616;--red-ink:#ff9a9a;--blue-bg:#14223f;--blue-ink:#9cbcff}}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:20px 16px 8px;max-width:980px;margin:0 auto}
+h1{margin:0;font-size:1.5rem}
+.sub{color:var(--muted);margin-top:4px;font-size:.95rem}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 16px;max-width:980px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line)}
+select,input,button{font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+select{min-width:150px}
+button{cursor:pointer}
+.chips{display:flex;gap:6px}
+.chip.on{background:var(--ink);color:var(--bg)}
+.summary{max-width:980px;margin:10px auto 0;padding:0 16px;color:var(--muted);font-size:.92rem;min-height:1.2em}
+main{max-width:980px;margin:0 auto;padding:12px 16px 40px}
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+th.r{color:#fff;background:var(--red)}th.b{color:#fff;background:var(--blue)}
+td.r{background:var(--red-bg);color:var(--red-ink);font-weight:700}
+td.b{background:var(--blue-bg);color:var(--blue-ink);font-weight:700}
+td.m{font-weight:700}
+.team{cursor:pointer;border-radius:6px;padding:2px 6px}
+.team.sel{background:var(--hl);color:#000;outline:2px solid #000}
+tr.past{opacity:.6}
+tr.next td.m::after{content:" NEXT";font-size:.65rem;background:var(--ink);color:var(--bg);padding:2px 5px;border-radius:5px;margin-left:6px;vertical-align:middle}
+.field{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--bg);font-size:.85rem}
+footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
+/* Mobile cards */
+@media (max-width:680px){
+ table,thead,tbody,tr,td{display:block}thead{display:none}
+ table{background:none;box-shadow:none}
+ tr{background:var(--card);border-radius:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+ td{border:none;padding:8px 12px}
+ td.m{grid-column:1}td.t{grid-column:2;text-align:right;color:var(--muted)}
+ td.f{grid-column:1/3;padding-top:0}
+ td.r,td.b{text-align:center;font-size:1.05rem}
+ td.r::before{content:"RED";display:block;font-size:.65rem;letter-spacing:.06em;opacity:.7}
+ td.b::before{content:"BLUE";display:block;font-size:.65rem;letter-spacing:.06em;opacity:.7}
+}
+</style>
+</head>
+<body>
+<header>
+ <h1>Match List</h1>
+ <div class="sub">RECF Achieve · CTEEA Ridgefield HS Blended Qualifier · 72 qualification matches · Nov 7</div>
+</header>
+<div class="bar">
+ <select id="team" aria-label="Filter by team"><option value="">All teams</option></select>
+ <div class="chips">
+  <button class="chip on" data-f="">All fields</button>
+  <button class="chip" data-f="Technology">Tech</button>
+  <button class="chip" data-f="Engineering">Eng</button>
+  <button class="chip" data-f="Design">Design</button>
+ </div>
+</div>
+<div class="summary" id="summary"></div>
+<main>
+<table>
+ <thead><tr><th>Match</th><th>Time</th><th>Field</th><th class="r">Red 1</th><th class="r">Red 2</th><th class="b">Blue 1</th><th class="b">Blue 2</th></tr></thead>
+ <tbody id="rows"></tbody>
+</table>
+</main>
+<footer>Tap any team number to see only its matches. Times are local (Nov 7, 2026).</footer>
+<script>
+const M=[{"m":"Q1","t":"9:00 AM","f":"Technology","r":["4478Y","9909H"],"b":["5017C","5017D"]},{"m":"Q2","t":"9:03 AM","f":"Engineering","r":["4478X","5017B"],"b":["1387B","877D"]},{"m":"Q3","t":"9:07 AM","f":"Design","r":["5150T","877K"],"b":["17814X","4478J"]},{"m":"Q4","t":"9:11 AM","f":"Technology","r":["4478A","4478Z"],"b":["1387A","5150K"]},{"m":"Q5","t":"9:15 AM","f":"Engineering","r":["17814Z","5150F"],"b":["1697B","4478T"]},{"m":"Q6","t":"9:18 AM","f":"Design","r":["1695B","1697A"],"b":["1695E","90722A"]},{"m":"Q7","t":"9:22 AM","f":"Technology","r":["17814Y","877H"],"b":["1695F","21860B"]},{"m":"Q8","t":"9:26 AM","f":"Engineering","r":["17814W","4478P"],"b":["17814U","877J"]},{"m":"Q9","t":"9:30 AM","f":"Design","r":["21860E","4478H"],"b":["1695A","5150J"]},{"m":"Q10","t":"9:33 AM","f":"Technology","r":["1695C","9909D"],"b":["21860T","9909K"]},{"m":"Q11","t":"9:37 AM","f":"Engineering","r":["21860K","5150D"],"b":["4478V","4478W"]},{"m":"Q12","t":"9:41 AM","f":"Design","r":["17814V","4478N"],"b":["18478A","9909E"]},{"m":"Q13","t":"9:45 AM","f":"Technology","r":["877K","9909D"],"b":["1695F","5150K"]},{"m":"Q14","t":"9:48 AM","f":"Engineering","r":["17814Y","4478H"],"b":["17814X","5150D"]},{"m":"Q15","t":"9:52 AM","f":"Design","r":["1695A","4478V"],"b":["17814W","877H"]},{"m":"Q16","t":"9:56 AM","f":"Technology","r":["5017B","5150T"],"b":["21860E","4478Z"]},{"m":"Q17","t":"10:00 AM","f":"Engineering","r":["1697B","4478P"],"b":["4478A","5150J"]},{"m":"Q18","t":"10:03 AM","f":"Design","r":["21860T","4478T"],"b":["1695E","877J"]},{"m":"Q19","t":"10:07 AM","f":"Technology","r":["1387B","90722A"],"b":["1387A","21860B"]},{"m":"Q20","t":"10:11 AM","f":"Engineering","r":["4478N","5017D"],"b":["4478W","9909K"]},{"m":"Q21","t":"10:15 AM","f":"Design","r":["17814Z","9909E"],"b":["1695C","877D"]},{"m":"Q22","t":"10:18 AM","f":"Technology","r":["17814U","9909H"],"b":["21860K","4478J"]},{"m":"Q23","t":"10:22 AM","f":"Engineering","r":["1695B","5017C"],"b":["4478X","5150F"]},{"m":"Q24","t":"10:26 AM","f":"Design","r":["1697A","17814V"],"b":["18478A","4478Y"]},{"m":"Q25","t":"10:30 AM","f":"Technology","r":["1387B","4478P"],"b":["1695E","5150D"]},{"m":"Q26","t":"10:33 AM","f":"Engineering","r":["1387A","21860E"],"b":["21860K","4478N"]},{"m":"Q27","t":"10:37 AM","f":"Design","r":["1695F","21860T"],"b":["4478A","4478J"]},{"m":"Q28","t":"10:41 AM","f":"Technology","r":["1697A","9909D"],"b":["4478V","4478X"]},{"m":"Q29","t":"10:45 AM","f":"Engineering","r":["1697B","4478H"],"b":["5150T","90722A"]},{"m":"Q30","t":"10:48 AM","f":"Design","r":["1695A","877J"],"b":["5150F","877K"]},{"m":"Q31","t":"10:52 AM","f":"Technology","r":["17814X","4478Y"],"b":["5150K","9909E"]},{"m":"Q32","t":"10:56 AM","f":"Engineering","r":["18478A","4478Z"],"b":["4478W","877D"]},{"m":"Q33","t":"11:00 AM","f":"Design","r":["17814U","5017C"],"b":["17814V","9909K"]},{"m":"Q34","t":"11:03 AM","f":"Technology","r":["21860B","5017D"],"b":["17814W","5017B"]},{"m":"Q35","t":"11:07 AM","f":"Engineering","r":["1695C","4478T"],"b":["17814Y","9909H"]},{"m":"Q36","t":"11:11 AM","f":"Design","r":["1695B","877H"],"b":["17814Z","5150J"]},{"m":"Q37","t":"11:15 AM","f":"Technology","r":["4478J","5150D"],"b":["1695A","9909E"]},{"m":"Q38","t":"11:18 AM","f":"Engineering","r":["1387B","17814V"],"b":["5150K","5150T"]},{"m":"Q39","t":"11:22 AM","f":"Design","r":["18478A","9909H"],"b":["5017B","877K"]},{"m":"Q40","t":"11:26 AM","f":"Technology","r":["4478N","4478V"],"b":["17814X","21860B"]},{"m":"Q41","t":"11:30 AM","f":"Engineering","r":["1387A","9909K"],"b":["4478T","877D"]},{"m":"Q42","t":"11:33 AM","f":"Design","r":["17814Z","4478Y"],"b":["4478H","4478P"]},{"m":"Q43","t":"11:37 AM","f":"Technology","r":["17814Y","5150F"],"b":["17814U","21860T"]},{"m":"Q44","t":"11:41 AM","f":"Engineering","r":["1695B","21860K"],"b":["4478A","877J"]},{"m":"Q45","t":"11:45 AM","f":"Design","r":["1695F","5150J"],"b":["1695E","5017C"]},{"m":"Q46","t":"11:48 AM","f":"Technology","r":["1697A","4478Z"],"b":["1695C","1697B"]},{"m":"Q47","t":"11:52 AM","f":"Engineering","r":["4478W","4478X"],"b":["21860E","877H"]},{"m":"Q48","t":"11:56 AM","f":"Design","r":["17814W","9909D"],"b":["5017D","90722A"]},{"m":"Q49","t":"12:00 PM","f":"Technology","r":["5150K","877J"],"b":["21860B","5150J"]},{"m":"Q50","t":"12:03 PM","f":"Engineering","r":["1697B","21860T"],"b":["1695A","17814X"]},{"m":"Q51","t":"12:07 PM","f":"Design","r":["4478A","877K"],"b":["877H","9909E"]},{"m":"Q52","t":"12:11 PM","f":"Technology","r":["1387B","4478V"],"b":["1695F","4478Z"]},{"m":"Q53","t":"12:15 PM","f":"Engineering","r":["5150F","9909D"],"b":["1387A","4478P"]},{"m":"Q54","t":"12:18 PM","f":"Design","r":["5150D","9909H"],"b":["17814Z","21860E"]},{"m":"Q55","t":"12:22 PM","f":"Technology","r":["1695E","9909K"],"b":["4478Y","5150T"]},{"m":"Q56","t":"12:26 PM","f":"Engineering","r":["1697A","17814U"],"b":["4478H","4478T"]},{"m":"Q57","t":"12:30 PM","f":"Design","r":["1695C","17814V"],"b":["4478X","5017D"]},{"m":"Q58","t":"12:33 PM","f":"Technology","r":["21860K","5017B"],"b":["17814Y","90722A"]},{"m":"Q59","t":"12:37 PM","f":"Engineering","r":["4478N","5017C"],"b":["4478J","877D"]},{"m":"Q60","t":"12:41 PM","f":"Design","r":["17814W","18478A"],"b":["1695B","4478W"]},{"m":"Q61","t":"12:45 PM","f":"Technology","r":["21860B","5150D"],"b":["4478T","877K"]},{"m":"Q62","t":"12:48 PM","f":"Engineering","r":["4478A","4478X"],"b":["1695A","9909H"]},{"m":"Q63","t":"12:52 PM","f":"Design","r":["21860K","5150F"],"b":["17814W","5150K"]},{"m":"Q64","t":"12:56 PM","f":"Technology","r":["21860T","877H"],"b":["1387A","5017B"]},{"m":"Q65","t":"1:00 PM","f":"Engineering","r":["17814V","877D"],"b":["1697B","17814Y"]},{"m":"Q66","t":"1:03 PM","f":"Design","r":["1695F","4478N"],"b":["1697A","17814Z"]},{"m":"Q67","t":"1:07 PM","f":"Technology","r":["4478V","9909K"],"b":["21860E","9909E"]},{"m":"Q68","t":"1:11 PM","f":"Engineering","r":["1387B","1695B"],"b":["4478J","9909D"]},{"m":"Q69","t":"1:15 PM","f":"Design","r":["17814X","18478A"],"b":["5017D","877J"]},{"m":"Q70","t":"1:18 PM","f":"Technology","r":["17814U","4478W"],"b":["4478Y","5150J"]},{"m":"Q71","t":"1:22 PM","f":"Engineering","r":["1695C","5150T"],"b":["4478P","5017C"]},{"m":"Q72","t":"1:26 PM","f":"Design","r":["4478Z","90722A"],"b":["1695E","4478H"]}];
+const teams=[...new Set(M.flatMap(x=>[...x.r,...x.b]))].sort((a,b)=>parseInt(a)-parseInt(b)||a.localeCompare(b));
+const sel=document.getElementById('team');
+teams.forEach(t=>sel.add(new Option(t,t)));
+let field='';
+try{const s=localStorage.getItem('team');if(s&&teams.includes(s))sel.value=s}catch(e){}
+const q=new URLSearchParams(location.search).get('team');if(q&&teams.includes(q.toUpperCase()))sel.value=q.toUpperCase();
+function toDate(t){const[hm,ap]=t.split(' ');let[h,m]=hm.split(':').map(Number);if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return new Date(2026,10,7,h,m)}
+function cell(t,c,team){return `<td class="${c}"><span class="team${t===team?' sel':''}" data-t="${t}">${t}</span></td>`}
+function render(){
+ const team=sel.value;const now=new Date();let nextFound=false;
+ const list=M.filter(x=>(!team||[...x.r,...x.b].includes(team))&&(!field||x.f===field));
+ document.getElementById('rows').innerHTML=list.map(x=>{
+  const d=toDate(x.t);let cls='';
+  if(d.getTime()+4*60e3<now)cls='past';else if(!nextFound){cls='next';nextFound=true}
+  return `<tr class="${cls}"><td class="m">${x.m}</td><td class="t">${x.t}</td><td class="f"><span class="field">${x.f}</span></td>`+
+   x.r.map(t=>cell(t,'r',team)).join('')+x.b.map(t=>cell(t,'b',team)).join('')+`</tr>`}).join('');
+ const s=document.getElementById('summary');
+ if(team){const rc=list.filter(x=>x.r.includes(team)).length;s.textContent=`${team}: ${list.length} match${list.length===1?'':'es'} shown · ${rc} red, ${list.length-rc} blue`}
+ else s.textContent=`${list.length} matches shown`;
+ try{localStorage.setItem('team',team)}catch(e){}
+}
+sel.onchange=render;
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));b.classList.add('on');field=b.dataset.f;render()});
+document.getElementById('rows').onclick=e=>{const t=e.target.closest('.team');if(t){sel.value=sel.value===t.dataset.t?'':t.dataset.t;render();scrollTo({top:0,behavior:'smooth'})}};
+render();setInterval(render,60000);
+</script>
+</body>
+</html>
