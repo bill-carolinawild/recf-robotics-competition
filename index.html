@@ -41,6 +41,11 @@ td.b{background:var(--blue-bg);color:var(--blue-ink);font-weight:700}
 td.m{font-weight:700}
 .team{cursor:pointer;border-radius:6px;padding:2px 6px}
 .team.sel{background:var(--hl);color:#000;outline:2px solid #000}
+.nav{margin-left:auto;display:flex;align-items:center;gap:6px}
+.nav button{padding:9px 14px}
+#cur{font-weight:700;min-width:5.5em;text-align:center;cursor:pointer}
+tr.cur td.m{background:var(--hl);color:#000}
+tr.cur td.m::after{content:" NOW";font-size:.65rem;background:#000;color:#fff;padding:2px 5px;border-radius:5px;margin-left:6px;vertical-align:middle}
 .field{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--bg);font-size:.85rem}
 footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
 /* Mobile cards */
@@ -76,6 +81,11 @@ footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
   <button class="chip" data-f="Engineering">Eng</button>
   <button class="chip" data-f="Design">Design</button>
  </div>
+ <div class="nav">
+  <button id="prev" aria-label="Previous match">◀</button>
+  <span id="cur" title="Jump to current match"></span>
+  <button id="next" aria-label="Next match">▶</button>
+ </div>
 </div>
 <div class="summary" id="summary"></div>
 <main>
@@ -91,7 +101,8 @@ const teams=[...new Set(M.flatMap(x=>[...x.r,...x.b]))].sort((a,b)=>parseInt(a)-
 const picked=new Set();
 const msBtn=document.getElementById('msBtn'),msPanel=document.getElementById('msPanel'),msList=document.getElementById('msList');
 msList.innerHTML=teams.map(t=>`<label><input type="checkbox" value="${t}">${t}</label>`).join('');
-let field='';
+let field='';let cur=0;
+try{const c=parseInt(localStorage.getItem('cur'));if(c>=0&&c<M.length)cur=c}catch(e){}
 try{const s=JSON.parse(localStorage.getItem('teams')||'[]');s.forEach(t=>teams.includes(t)&&picked.add(t))}catch(e){}
 const q=new URLSearchParams(location.search).get('team');
 if(q){const qs=q.toUpperCase().split(',').filter(t=>teams.includes(t));if(qs.length){picked.clear();qs.forEach(t=>picked.add(t))}}
@@ -99,8 +110,10 @@ function cell(t,c){return `<td class="${c}"><span class="team${picked.has(t)?' s
 function render(){
  const list=M.filter(x=>(!picked.size||[...x.r,...x.b].some(t=>picked.has(t)))&&(!field||x.f===field));
  document.getElementById('rows').innerHTML=list.map(x=>
-  `<tr><td class="m">${x.m}</td><td class="t">${x.t}</td><td class="f"><span class="field">${x.f}</span></td>`+
+  `<tr id="m${M.indexOf(x)}"${M.indexOf(x)===cur?' class="cur"':''}><td class="m">${x.m}</td><td class="t">${x.t}</td><td class="f"><span class="field">${x.f}</span></td>`+
    x.r.map(t=>cell(t,'r')).join('')+x.b.map(t=>cell(t,'b')).join('')+`</tr>`).join('');
+ document.getElementById('cur').textContent=`Now: ${M[cur].m}`;
+ document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===M.length-1;
  msList.querySelectorAll('input').forEach(c=>c.checked=picked.has(c.value));
  const names=[...picked];
  msBtn.textContent=(names.length===0?'All teams':names.length<=2?names.join(', '):`${names.length} teams`)+' ▾';
@@ -110,6 +123,11 @@ function render(){
  else s.textContent=n;
  try{localStorage.setItem('teams',JSON.stringify(names))}catch(e){}
 }
+function step(d){cur=Math.max(0,Math.min(M.length-1,cur+d));try{localStorage.setItem('cur',cur)}catch(e){}render();showCur()}
+function showCur(){const r=document.getElementById('m'+cur);if(r)r.scrollIntoView({behavior:'smooth',block:'center'})}
+document.getElementById('prev').onclick=()=>step(-1);
+document.getElementById('next').onclick=()=>step(1);
+document.getElementById('cur').onclick=showCur;
 function toggle(t){picked.has(t)?picked.delete(t):picked.add(t)}
 function openPanel(o){msPanel.hidden=!o;msBtn.setAttribute('aria-expanded',o)}
 msBtn.onclick=()=>openPanel(msPanel.hidden);
