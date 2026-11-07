@@ -45,7 +45,10 @@ td.m{font-weight:700}
 .nav button{padding:9px 14px}
 #cur{font-weight:700;min-width:5.5em;text-align:center;cursor:pointer}
 tr.cur td.m{background:var(--hl);color:#000}
-tr.cur td.m::after{content:" NOW";font-size:.65rem;background:#000;color:#fff;padding:2px 5px;border-radius:5px;margin-left:6px;vertical-align:middle}
+tr.cur td{box-shadow:inset 0 3px 0 var(--hl),inset 0 -3px 0 var(--hl)}
+tr.cur td:first-child{box-shadow:inset 3px 0 0 var(--hl),inset 0 3px 0 var(--hl),inset 0 -3px 0 var(--hl)}
+tr.cur td:last-child{box-shadow:inset -3px 0 0 var(--hl),inset 0 3px 0 var(--hl),inset 0 -3px 0 var(--hl)}
+tr.cur td.m::after{content:" LIVE";font-size:.65rem;background:#000;color:#fff;padding:2px 5px;border-radius:5px;margin-left:6px;vertical-align:middle}
 .field{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--bg);font-size:.85rem}
 footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
 /* Mobile cards */
@@ -60,6 +63,7 @@ footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
  td.r::before{content:"RED";display:block;font-size:.65rem;letter-spacing:.06em;opacity:.7}
  td.b::before{content:"BLUE";display:block;font-size:.65rem;letter-spacing:.06em;opacity:.7}
 }
+@media (max-width:680px){tr.cur{box-shadow:0 0 0 3px var(--hl)}tr.cur td,tr.cur td:first-child,tr.cur td:last-child{box-shadow:none}}
 </style>
 </head>
 <body>
@@ -109,7 +113,8 @@ if(q){const qs=q.toUpperCase().split(',').filter(t=>teams.includes(t));if(qs.len
 function cell(t,c){return `<td class="${c}"><span class="team${picked.has(t)?' sel':''}" data-t="${t}">${t}</span></td>`}
 function render(){
  const list=M.filter(x=>(!picked.size||[...x.r,...x.b].some(t=>picked.has(t)))&&(!field||x.f===field));
- document.getElementById('rows').innerHTML=list.map(x=>
+ const rows=M.filter((x,i)=>i===cur||list.includes(x));
+ document.getElementById('rows').innerHTML=rows.map(x=>
   `<tr id="m${M.indexOf(x)}"${M.indexOf(x)===cur?' class="cur"':''}><td class="m">${x.m}</td><td class="t">${x.t}</td><td class="f"><span class="field">${x.f}</span></td>`+
    x.r.map(t=>cell(t,'r')).join('')+x.b.map(t=>cell(t,'b')).join('')+`</tr>`).join('');
  document.getElementById('cur').textContent=`Now: ${M[cur].m}`;
