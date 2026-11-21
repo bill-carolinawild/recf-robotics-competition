@@ -1,1 +1,10 @@
-{ "cleanUrls": true }
+{
+  "cleanUrls": true,
+  "functions": {
+    "api/current.js": {
+      "maxDuration": 30,
+      "memory": 1024,
+      "includeFiles": "{node_modules/ffmpeg-static/ffmpeg,node_modules/tesseract.js-core/**,node_modules/tesseract.js/src/worker-script/**}"
+    }
+  }
+}
