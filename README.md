@@ -1,4 +1,4 @@
-# CTEEA Ridgefield HS Blended Qualifier – Match List
+# CTEEA Daniel Hand HS Blended Qualifier – Match List
 
 Static site (no build step). Deploy on Vercel: import this repo, Framework Preset "Other", no build command, output directory = root.
 
