@@ -70,7 +70,7 @@ footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
  td.r::before{content:"RED";display:block;font-size:.65rem;letter-spacing:.06em;opacity:.7}
  td.b::before{content:"BLUE";display:block;font-size:.65rem;letter-spacing:.06em;opacity:.7}
 }
-@media (max-width:680px){.bar{padding:8px 10px;gap:5px;font-size:.9rem}.bar button{padding:8px 9px}.ms-panel{width:200px}.pip{width:55vw}.pip.big{width:calc(100vw - 24px)}tr.cur{box-shadow:0 0 0 3px var(--hl)}tr.cur td,tr.cur td:first-child,tr.cur td:last-child{box-shadow:none}}
+@media (max-width:680px){.bar{padding:8px 10px;gap:5px;font-size:.9rem}.bar button{padding:8px 9px}.ms-panel{width:200px}.pip,.pip.big{left:0;right:0;bottom:0;width:100%;max-width:none;border-radius:12px 12px 0 0;padding-bottom:env(safe-area-inset-bottom)}#pipSize{display:none}body.pip-on main{padding-bottom:calc(56.25vw + 60px)}tr.cur{box-shadow:0 0 0 3px var(--hl)}tr.cur td,tr.cur td:first-child,tr.cur td:last-child{box-shadow:none}}
 </style>
 </head>
 <body>
@@ -167,7 +167,7 @@ const pip=document.getElementById('pip'),pipVid=document.getElementById('pipVid'
 document.getElementById('pipLink').href=`https://www.youtube.com/watch?v=${VID}`;
 function setPip(o){
  pip.hidden=!o;document.body.classList.toggle('pip-on',o);
- pipVid.innerHTML=o?`<iframe src="https://www.youtube.com/embed/${VID}?autoplay=1&mute=1&playsinline=1" title="Live stream" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`:'';
+ pipVid.innerHTML=o?`<iframe src="https://www.youtube.com/embed/${VID}?autoplay=1&mute=1&playsinline=1" title="Live stream" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`:'';
  try{localStorage.setItem('pip',o?'1':'')}catch(e){}
 }
 document.getElementById('streamBtn').onclick=()=>setPip(pip.hidden);
