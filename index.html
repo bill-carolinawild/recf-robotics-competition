@@ -42,7 +42,6 @@ td.m{font-weight:700}
 .nav{margin-left:auto;display:flex;align-items:center;gap:6px}
 .nav button{padding:9px 12px}
 #cur{font-weight:700;min-width:2.6em;text-align:center;cursor:pointer;white-space:nowrap}
-#cur.following::before{content:"● ";color:var(--red);font-size:.7em;vertical-align:middle}
 #streamBtn{position:relative}
 .badge{position:absolute;top:-7px;right:-6px;font-size:.55rem;font-weight:800;letter-spacing:.04em;line-height:1;padding:2px 4px;border-radius:5px;color:#fff;pointer-events:none}
 .badge.on{background:var(--red)}
@@ -106,7 +105,7 @@ footer{color:var(--muted);font-size:.8rem;text-align:center;padding:0 16px 30px}
  </div>
  <div class="nav">
   <button id="prev" aria-label="Previous match">◀</button>
-  <span id="cur" title="Current match – tap to follow the stream and jump to it"></span>
+  <span id="cur" title="Current match – tap to jump to it"></span>
   <button id="next" aria-label="Next match">▶</button>
   <button id="streamBtn" aria-label="Show live stream" title="Live stream">📺<span class="badge" id="liveBadge" hidden></span></button>
  </div>
@@ -147,7 +146,7 @@ function render(){
  document.getElementById('rows').innerHTML=rows.map(x=>
   `<tr id="m${M.indexOf(x)}"${M.indexOf(x)===cur?' class="cur"':''}><td class="m">${x.m}</td><td class="t">${x.t}</td><td class="f"><span class="field">${x.f}</span></td>`+
    x.r.map(t=>cell(t,'r',x)).join('')+x.b.map(t=>cell(t,'b',x)).join('')+`</tr>`).join('');
- const curEl=document.getElementById('cur');curEl.textContent=M[cur].m;curEl.classList.toggle('following',follow&&!!liveM);
+ document.getElementById('cur').textContent=M[cur].m;
  document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===M.length-1;
  teamMS.sync();fieldMS.sync();
  const names=[...picked];
@@ -159,17 +158,14 @@ function render(){
  else s.textContent=n;
  try{localStorage.setItem('teams',JSON.stringify(names))}catch(e){}
 }
-function step(d){follow=false;cur=Math.max(0,Math.min(M.length-1,cur+d));try{localStorage.setItem('cur-1121',cur)}catch(e){}render();showCur()}
+function step(d){cur=Math.max(0,Math.min(M.length-1,cur+d));try{localStorage.setItem('cur-1121',cur)}catch(e){}render();showCur()}
 function showCur(){const r=document.getElementById('m'+cur);if(r)r.scrollIntoView({behavior:'smooth',block:'center'})}
 document.getElementById('prev').onclick=()=>step(-1);
 document.getElementById('next').onclick=()=>step(1);
-document.getElementById('cur').onclick=()=>{follow=true;applyLive();render();showCur()};
-// Follow the match number read off the live stream; ◀ ▶ switch to manual until the match number is tapped
-let follow=true,liveM=null;
-function applyLive(){const i=M.findIndex(x=>x.m===liveM);if(follow&&i>=0&&i!==cur){cur=i;try{localStorage.setItem('cur-1121',cur)}catch(e){}render()}}
+document.getElementById('cur').onclick=showCur;
 function setBadge(live){const b=document.getElementById('liveBadge');b.hidden=live==null;b.className='badge '+(live?'on':'off');b.textContent=live?'LIVE':'OFFLINE'}
 async function poll(){
- try{const d=await (await fetch('/api/current',{cache:'no-store'})).json();setBadge(d.live);if(d.m){liveM=d.m;applyLive();render()}}
+ try{const d=await (await fetch('/api/stream',{cache:'no-store'})).json();setBadge(d.live);setVideo(d.video)}
  catch(e){setBadge(null)}
 }
 setInterval(poll,20000);
@@ -189,12 +185,20 @@ const fieldMS=multiSelect('msFields',FIELDS.map(([v])=>[v,v]),fields,()=>FIELDS.
 document.addEventListener('click',e=>{if(!e.target.closest('.ms'))closeAll()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
 document.getElementById('rows').onclick=e=>{const t=e.target.closest('.team');if(t){toggle(t.dataset.t);render();scrollTo({top:0,behavior:'smooth'})}};
-const VID='RNHNQwf6D2s';
+// Until /api/stream names the channel's current stream, embed whatever the channel has live
+const CHANNEL='UCU9DBV19vLjnKPoFA-N_g8Q';
+let VID=null;
 const pip=document.getElementById('pip'),pipVid=document.getElementById('pipVid');
-document.getElementById('pipLink').href=`https://www.youtube.com/watch?v=${VID}`;
+function setVideo(v){
+ if(!v||v===VID)return;VID=v;
+ document.getElementById('pipLink').href=`https://www.youtube.com/watch?v=${VID}`;
+ if(!pip.hidden)setPip(true);
+}
+document.getElementById('pipLink').href='https://www.youtube.com/@cteearobotics8294/live';
 function setPip(o){
  pip.hidden=!o;document.body.classList.toggle('pip-on',o);
- pipVid.innerHTML=o?`<iframe src="https://www.youtube.com/embed/${VID}?autoplay=1&mute=1&playsinline=1" title="Live stream" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`:'';
+ const src=VID?`embed/${VID}?`:`embed/live_stream?channel=${CHANNEL}&`;
+ pipVid.innerHTML=o?`<iframe src="https://www.youtube.com/${src}autoplay=1&mute=1&playsinline=1" title="Live stream" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`:'';
  try{localStorage.setItem('pip',o?'1':'')}catch(e){}
 }
 document.getElementById('streamBtn').onclick=()=>setPip(pip.hidden);
